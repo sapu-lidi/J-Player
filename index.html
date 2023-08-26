@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MD-Player</title>
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="./assets/img/favicon.webp">
+    <link rel="stylesheet" href="./assets/css/main.css">
+    <link rel="stylesheet" href="./assets/css/utils.css">
+    <!-- FontAwesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+       
+    </style>
+
+</head>
+<body>
+    <audio id="source" src="" ></audio>
+    <!-- <i class="fa-solid fa-angles-up"></i> -->
+    <div class="main">
+        <section id="home">
+            <div class="flex-between">
+                <span onclick="full()" id="btnFull" class="flex-end bg-secondary btn-left">
+                    <i id="iconFull" class="fa-solid fa-angles-up" style="margin: auto;"></i>
+                </span>
+                <span onclick="btnLyric()" class="flex-end bg-secondary btn-right">
+                    <i class="fa-solid fa-music" style="margin: auto;"></i>
+                </span>
+            </div>
+            <p class="now-playing my-1">-- OF --</p>
+            <div class="art-box" style="background-image: url(./assets/img/vinyl-record.png);">
+                <!-- <div id="art" class="art"></div> -->
+                <img id="art" class="art" alt="">
+            </div>
+            <div class="detail m-1">
+                <div class="flex-center">
+                    <p class="short-detail"><span class="artist"></span><span class="title"></span></p>
+                </div>
+                <p class="album my-1"></p>
+                <p class="my-1"><span class="genre"></span><span class="year"></span></p>
+            </div>
+        </section>
+        <section id="list" class="m-1">
+            <ul id="myList" style="margin: auto;"></ul>
+        </section>
+        <section id="lyric" style="text-align: center;">
+            <div class="flex-end">
+                <span onclick="btnHome()" class=" bg-secondary btn-right flex" >
+                    <div class="" style="margin: auto;">
+                        <i class="fa-solid fa-house" ></i>
+                    </div>
+                </span>
+            </div>
+            
+            <div id="myLyric" style="white-space: pre-line"></div>
+        </section>
+    </div>
+
+    <footer class="bg-white">
+        <div class="flex-around my-1">
+            <div id="btnType" onclick="btnType()" >
+                
+            </div>
+            <!-- <i class="fa-solid fa-heart"></i> -->
+            <i class="fa-regular fa-heart"></i>
+
+        </div>
+
+        <div class="flex-around my-1">
+            <span class="current-time">--:--</span>
+            <input id="remain" type="range" class="seek_slider" onchange="seekTo()"  min="1" max="100"
+            value="0">
+            <span class="total-duration">--:--</span>
+        </div>
+        <div class="flex-around my-1">
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+            <i onclick="prevTrack()" class="fa-solid fa-step-backward fa-2x" ></i>
+            <div onclick="playpauseTrack()" class="playpause-track">
+                <i class="fa-solid fa-play-circle fa-2x"></i>
+            </div>
+            
+            <i onclick="nextTrack()" class="fa-solid fa-step-forward fa-2x"></i>
+            <i onclick="btnMenu()" class="fa-solid fa-bars "></i>
+        </div>
+    </footer>
+
+    <script src="./assets/js/db.js"></script>
+    <script>
+        for (i = 0; i < track_list.length; ++i) {
+            let li = document.createElement('li');
+            li.innerText = track_list[i].path.replaceAll("%20", " ").replace(".mp3","");
+            li.id = i
+            li.dataset.id = i
+            li.onclick = function() {play(this)};
+            // li.onclick = play(i);
+            list.appendChild(li);
+        }
+
+    </script>
+    <script src="./assets/js/main.js"></script>
+    <script>
+
+        
+        
+
+    </script>
+</body>
+</html>
