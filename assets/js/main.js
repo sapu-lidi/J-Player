@@ -35,6 +35,7 @@ let btnMenuState = false
 let btnLyricState = false
 let fullState = false
 let typePlay = true
+let subPath = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'
 
         // curr_track.volume = 0.2;
 
@@ -79,7 +80,7 @@ function loadTrack(track_index) {
         clearInterval(updateTimer);
         resetValues();
         
-        curr_track.src = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'+track_list[track_index].path;
+        curr_track.src = subPath+track_list[track_index].path;
         curr_track.load();
         now_playing.textContent =
             (track_index + 1) + " OF " + track_list.length;
@@ -146,7 +147,7 @@ function loadTrack(track_index) {
         // console.log('track_index :'+track_index)
         // console.log('track_play :'+track_play)
         
-        curr_track.src = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'+track_list[track_index].path
+        curr_track.src = subPath+track_list[track_index].path
         playTrack()
 
             
@@ -169,7 +170,7 @@ function loadTrack(track_index) {
                 // console.log('track_index :'+track_index)
         // console.log('track_play :'+track_play)
         
-        curr_track.src = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'+track_list[track_index].path
+        curr_track.src = subPath+track_list[track_index].path
         playTrack()
     }
 
@@ -290,7 +291,7 @@ function loadTrack(track_index) {
         var data = parseInt(set.getAttribute("data-id"))+1
         track_index = parseInt(set.getAttribute("data-id"))
         track_play = data
-        curr_track.src = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'+track_list[track_index].path
+        curr_track.src = subPath+track_list[track_index].path
         playTrack()
         list.style.display ='none'
         home.style.display ='inline'
