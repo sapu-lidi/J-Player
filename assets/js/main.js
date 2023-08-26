@@ -35,7 +35,7 @@ let btnMenuState = false
 let btnLyricState = false
 let fullState = false
 let typePlay = true
-let subPath = 'https://github.com/sapu-lidi/J-Player/blob/main/assets/audios/'
+let subPath = './assets/audios/'
 
         // curr_track.volume = 0.2;
 
