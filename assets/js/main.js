@@ -26,8 +26,19 @@ let icon_full = document.getElementById('iconFull')
 let icon_type = document.getElementById('btnType')
 
 // Specify globally used values
-let track_index = 0;
-let track_play = 1;
+
+let track_play = localStorage.getItem("track_play");
+let track_index = localStorage.getItem("track_index");
+
+
+if (!track_play || !track_index) {
+    track_play = localStorage.setItem("track_play", 1)
+    track_index = localStorage.setItem("track_index", 0)
+} 
+
+
+
+
 let isPlaying = false;
 let updateTimer;
 let volume_default = 0.2;
@@ -37,7 +48,7 @@ let fullState = false
 let typePlay = true
 let subPath = './assets/audios/'
 
-        // curr_track.volume = 0.2;
+const playMode = localStorage.getItem("playMode");
 
 function btnMenu() {
     if (btnMenuState == false) {
@@ -72,10 +83,6 @@ function btnHome() {
     } 
 }
 
-
-// =========================
-
-
 function loadTrack(track_index) {
         clearInterval(updateTimer);
         resetValues();
@@ -83,23 +90,9 @@ function loadTrack(track_index) {
         curr_track.src = subPath+track_list[track_index].path;
         curr_track.load();
         now_playing.textContent =
-            (track_index + 1) + " OF " + track_list.length;
+            (parseInt(track_index) + 1) + " OF " + track_list.length;
         updateTimer = setInterval(seekUpdate, 1000);
         curr_track.addEventListener("ended", nextTrack);
-    }
-    
-    function random_bg_color() {
-        // Get a random number between 64 to 256
-        // (for getting lighter colors)
-        let red = Math.floor(Math.random() * 256) + 64;
-        let green = Math.floor(Math.random() * 256) + 64;
-        let blue = Math.floor(Math.random() * 256) + 64;
-        
-        // Construct a color with the given values
-        let bgColor = "rgb(" + red + ", " + green + ", " + blue + ")";
-        
-        // Set the background to the new color
-        document.body.style.background = bgColor;
     }
     
     function resetValues() {
@@ -114,19 +107,19 @@ function loadTrack(track_index) {
     }
     
     function playTrack() {
-        random_bg_color();
+        // random_bg_color();
         now_playing.textContent = track_play + " OF " + track_list.length;
         curr_track.play();
         isPlaying = true;
         readTags();
-        playpause_btn.innerHTML = '<i class="fa fa-pause-circle fa-2x"></i>';
+        playpause_btn.innerHTML = '<i class="icon-play-pause fa-solid fa-pause fa-2x"></i>';
         document.getElementById("art").classList.add('spinning')
     }
-    
+
     function pauseTrack() {
         curr_track.pause();
         isPlaying = false;
-        playpause_btn.innerHTML = '<i class="fa fa-play-circle fa-2x"></i>';
+        playpause_btn.innerHTML = '<i class="icon-play-pause fa-solid fa-play fa-2x"></i>';
         document.getElementById("art").classList.remove('spinning')
     }
     
@@ -144,9 +137,10 @@ function loadTrack(track_index) {
             randomPlay()
         }
 
-        // console.log('track_index :'+track_index)
-        // console.log('track_play :'+track_play)
-        
+        localStorage.setItem("track_play", track_play)
+        localStorage.setItem("track_index", track_index)
+        track_play = track_play
+        track_index = track_index
         curr_track.src = subPath+track_list[track_index].path
         playTrack()
 
@@ -167,8 +161,10 @@ function loadTrack(track_index) {
             randomPlay()
         }
 
-                // console.log('track_index :'+track_index)
-        // console.log('track_play :'+track_play)
+        localStorage.setItem("track_play", track_play)
+        localStorage.setItem("track_index", track_index)
+        track_play = track_play
+        track_index = track_index
         
         curr_track.src = subPath+track_list[track_index].path
         playTrack()
@@ -177,6 +173,7 @@ function loadTrack(track_index) {
     function seekTo() {
         seekto = curr_track.duration * (seek_slider.value / 100);
         curr_track.currentTime = seekto;
+        document.querySelector('').style.width = seekto+'%'
         }
         
         function setVolume() {
@@ -213,62 +210,74 @@ function loadTrack(track_index) {
     function randomPlay() {
         track_index = Math.floor(Math.random() * track_list.length);
         track_play = track_index + 1
+                localStorage.setItem("track_play", track_play)
+        localStorage.setItem("track_index", track_index)
+        track_play = track_play
+        track_index = track_index
     }
 
 
 
     function readTags() {
+        let file = document.getElementById('source').src;
 
-            track_title.textContent = track_list[track_index].title;
-            track_artist.textContent = track_list[track_index].artist+ ' ~ ';
-            track_album.textContent = track_list[track_index].album;
-            track_genre.textContent = track_list[track_index].genre+ ' - ';
-            track_year.textContent = track_list[track_index].year;
-            document.title = track_list[track_index].artist+" ~ "+track_list[track_index].title;
-            if (track_list[track_index].lyric !== '') {
-                myLyric.textContent = track_list[track_index].lyric
+        new jsmediatags.Reader(file)
+        .setTagsToRead(["title", "artist", "album", 'year', "genre", "picture", "lyrics"])
+        .read({
+            onSuccess: function(tag) {
+                // debugging
+            // console.log(tag.tags);
+
+            if (tag.tags.title) {
+                track_title.textContent = ' '+tag.tags.title+' ';
+            } else {
+                track_title.textContent = ' '+track_list[track_index].title+' ';
+            }
+
+            if (tag.tags.artist) {
+                track_artist.textContent = ' '+tag.tags.artist+' ';
+            } else {
+                track_artist.textContent = ' '+track_list[track_index].artist+' ';
+            }
+
+            if (tag.tags.album) {
+                track_album.textContent = tag.tags.album;
+            } else {
+                track_album.textContent = track_list[track_index].album;
+            }
+
+            if (tag.tags.genre) {
+                track_genre.textContent = ' '+tag.tags.genre+' ';
+            } else {
+                track_genre.textContent = ' '+track_list[track_index].genre+' ';
+            }
+
+            if (tag.tags.year) {
+                track_year.textContent = ' '+tag.tags.year+' ';
+            } else {
+                track_year.textContent = ' '+track_list[track_index].year+' ';
+            }
+
+            if (tag.tags.picture) {
+                const { data, format } = tag.tags.picture;
+                let base64String = _arrayBufferToBase64(data);
+                let art = document.getElementById('art')
+                art.src = `data:${data.format};base64,${base64String}`;
+            } else {
+                art.src = './assets/img/vinyl-record.png'
+            }
+
+            if (tag.tags.lyrics) {
+                myLyric.textContent = tag.tags.lyrics.lyrics
             } else {
                 myLyric.textContent = 'Lyric not found!'
             }
 
-            if (track_list[track_index].image !== '') {
-                // myLyric.textContent = track_list[track_index].lyric
-                art.src = './assets/img/thumbs/'+track_list[track_index].image
-            } 
-        // let file = document.getElementById('source').src;
-
-        // new jsmediatags.Reader(file)
-        // .setTagsToRead(["title", "artist", "album", 'year', "genre", "picture", "lyrics"])
-        // .read({
-        //     onSuccess: function(tag) {
-        //         // debugging
-        //     console.log(tag);
-
-        //     track_title.textContent = tag.tags.title;
-        //     track_artist.textContent = tag.tags.artist+ ' ~ ';
-        //     track_album.textContent = tag.tags.album;
-        //     track_genre.textContent = tag.tags.genre+ ' - ';
-        //     track_year.textContent = tag.tags.year;
-
-            
-        //     if (tag.tags.picture) {
-        //         const { data, format } = tag.tags.picture;
-        //         let base64String = _arrayBufferToBase64(data);
-        //         let art = document.getElementById('art')
-        //         art.src = `data:${data.format};base64,${base64String}`;
-        //     }
-
-        //     if (tag.tags.lyrics) {
-        //         myLyric.textContent = tag.tags.lyrics.lyrics
-        //     } else {
-        //         myLyric.textContent = 'Lyric not found!'
-        //     }
-
-        //     },
-        //     onError: function(error) {
-        //     console.log(':(', error.type, error.info);
-        //     }
-        // });
+            },
+            // onError: function(error) {
+            // console.log(':(', error.type, error.info);
+            // }
+        });
     }
 
     function _arrayBufferToBase64( buffer ) {
@@ -292,15 +301,17 @@ function loadTrack(track_index) {
         track_index = parseInt(set.getAttribute("data-id"))
         track_play = data
         curr_track.src = subPath+track_list[track_index].path
+                localStorage.setItem("track_play", track_play)
+        localStorage.setItem("track_index", track_index)
+        track_play = track_play
+        track_index = track_index
         playTrack()
         list.style.display ='none'
         home.style.display ='inline'
     }
         
     function full() {
-        // alert('ok')
         if (fullState == false) {
-            // alert('ok')
             fullState = true
             document.body.requestFullscreen()
             document.getElementById('iconFull').style.rotate = '135deg'
@@ -314,17 +325,26 @@ function loadTrack(track_index) {
     function btnType() {
             if (typePlay == true) {
                 typePlay = false
-                icon_type.innerHTML = '<i class="fa-solid fa-shuffle"></i>'
+                icon_type.innerHTML = '<i class="icon fa-solid fa-shuffle"></i>'
+                localStorage.setItem("playMode", "random");
                 // alert('random')
             } else {
                 typePlay = true
                 // alert('all')
-                icon_type.innerHTML = '<i  class="fa-solid fa-rotate-right"></i>'
+                icon_type.innerHTML = '<i  class="icon fa-solid fa-rotate-right"></i>'
+                localStorage.removeItem("playMode");
             }
             console.log('status type play : '+typePlay)
         }
 
     // read once on reload
     document.getElementById('iconFull').style.rotate = '-45deg'
-    icon_type.innerHTML = '<i  class="fa-solid fa-rotate-right"></i>'
+    if (playMode) {
+        icon_type.innerHTML = '<i  class="icon fa-solid fa-shuffle"></i>'
+        typePlay = false
+    } else {
+        icon_type.innerHTML = '<i  class="icon fa-solid fa-rotate-right"></i>'
+        typePlay = true
+    }
+
     loadTrack(track_index);
