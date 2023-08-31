@@ -5,107 +5,97 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>J-Player</title>
     <!-- favicon -->
-    <link rel="icon" type="image/x-icon" href="./assets/img/favicon.webp">
-    <link rel="stylesheet" href="./assets/css/main.css">
-    <!-- FontAwesome icons -->
+    <link rel="icon" type="image/x-icon" href="./assets/img/logo.png">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- fontawesome icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
     <style>
         
     </style>
-
 </head>
 <body>
-    <audio id="source" src="" ></audio>
+    <div class="top">
+        <div class="box-top">
+            <button onclick="full()" class="btn" type="">
+                <div id="iconFullScreen" class="icon-fullscreen">
+                    <i class="fa-solid fa-expand"></i>
+                </div>
+            </button>
+
+            <button id="btnLyric" onclick="btnLyric()" class="btn-lyric" type="">
+                <div id="iconLyric" class="">
+                    <i  class="fa-solid fa-music"></i>
+                </div>
+            </button>
+        </div>
+    </div>
     <div class="main">
-        <section id="home">
-            <div class="btn-top">
-                <span onclick="full()" id="btnFull" class="btn-small">
-                    <i id="iconFull" class="icon fa-solid fa-angles-up" ></i>
-                </span>
-                <span onclick="btnLyric()" class="btn-small">
-                    <i class="icon fa-solid fa-music"></i>
-                </span>
-            </div>
+        <div id="list">
+            <ul id="myList">
+                
+            </ul>
+        </div>
+        <div id="home">
             <p class="now-playing">-- OF --</p>
-            <div class="art-box" style="background-image: url(./assets/img/vinyl-record.png);">
-                <img id="art" class="art" src="./assets/img/vinyl-record.png" alt="">
+            <div class="box-art" >
+                <div  class="cover-art" >
+                    <img id="art" alt="">
+                </div>
+                <!-- <img src="" alt=""> -->
             </div>
             <div class="detail">
-                <div class="flex-center">
-                    <p class="short-detail"><span class="artist"></span><span class="title"></span></p>
-                </div>
-                <p class="album my-1"></p>
-                <p class="my-1"><span class="genre"></span><span class="year"></span></p>
+                <h3 class="title">Idol</h3>
+                <p class="artist">Yoasobi</p>
+                <p class="album"></p>
             </div>
-        </section>
-        <section id="list">
-            <ul id="myList" style="margin: auto;"></ul>
-        </section>
-        <section id="lyric" style="text-align: center;">
-            <div class="btn-lyric">
-                <span onclick="btnHome()" class="btn-home" >
-                    <div class="" style="margin: auto;">
-                        <i class="icon-home fa-solid fa-house" ></i>
-                    </div>
-                </span>
+        </div>
+        <div id="lyric" >
+            <div id="myLyric">
+
             </div>
             
-            <div id="myLyric" style="white-space: pre-line"></div>
-        </section>
+        </div>
     </div>
-
-    <footer class="">
-
+    <div class="control">
         <div class="time">
             <span class="current-time">--:--</span>
             <span class="total-duration">--:--</span>
         </div>
         <div class="box-slider">
-            
-            <input id="remain" type="range" class="seek_slider" onchange="seekTo()"  min="1" max="100"
-            value="0">
-            
+            <input id="remain" type="range" class="seek_slider" onchange="seekTo()"  min="1" max="100">
+
         </div>
-        <div class="control">
-            <div id="btnType" class="btn-big" onclick="btnType()">
-            </div>
-            <div class="btn-big">
-                <i onclick="prevTrack()" class="icon-prev-next fa-solid fa-step-backward fa-2x" ></i>
-            </div>
-            <div onclick="playpauseTrack()" class="playpause-track">
-                <i class="icon-play-pause fa-solid fa-play fa-2x"></i>
-            </div>
-            
-            <div onclick="nextTrack()" class="btn-big">
-                <i class="icon-prev-next fa-solid fa-step-forward fa-2x"></i>
-            </div>
-            <div class="btn-big">
-                <i onclick="btnMenu()" class="icon-bar fa-solid fa-bars "></i>
-            </div>
+        <div class="button">
+            <button onclick="btnMode()">
+                <div id="iconMode">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </div>
+            </button>
+            <button onclick="prevTrack()"><i class="fa-solid fa-backward-step fa-2xl"></i></button>
+            <button onclick="playpauseTrack()" class="playpause-track"><i class="fa-solid fa-play fa-2xl"></i></button>
+            <button onclick="nextTrack()"><i class="fa-solid fa-forward-step fa-2xl"></i></button>
+            <button id="btnList" onclick="btnList()"><i class="fa-solid fa-bars"></i></button>
+            <div class="box-volume">
+            <input id="inputVolume" type="range" class="volume_slider" value="20" onchange="setVolume()">
         </div>
-    </footer>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsmediatags/3.9.5/jsmediatags.min.js"></script>
+    </div>
+    <audio id="source" src="" ></audio>
+
 
     <script src="./assets/js/db.js"></script>
+    <script src="./assets/js/btn.js"></script>
+    <script src="./assets/js/player.js"></script>
     <script>
-        for (i = 0; i < track_list.length; ++i) {
+        // let myList = document.getElementById("myList")
+        for (i = 1; i < track_list.length; ++i) {
             let li = document.createElement('li');
-            li.innerText = track_list[i].path.replaceAll("_", " ").replace("-", "~").replace("/", " ~ ").replace(".mp3","");
+            li.innerText = track_list[i].artist+' ~ '+track_list[i].title;
             li.id = i
             li.dataset.id = i
             li.onclick = function() {play(this)};
             // li.onclick = play(i);
-            list.appendChild(li);
+            myList.appendChild(li);
         }
-
-    </script>
-    <script src="./assets/js/main.js"></script>
-    <script>
-
-        
-        
-
     </script>
 </body>
 </html>
